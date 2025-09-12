@@ -1,6 +1,6 @@
 import express from "express";
 import cors from "cors";
-import heroes from "../Heroes.json";
+import heroes from "../Heroes.json" assert { type: "json" };
 
 const app = express();
 const PORT = 5173;

@@ -1,12 +1,45 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import type { IHero } from "../../types/herotypes";
+import type { IHero, PostHero } from "../../types/herotypes";
 
 export const heroApi = createApi({
   reducerPath: "heroApi",
-  baseQuery: fetchBaseQuery({ baseUrl: "http://localhost:5173/" }),
+  baseQuery: fetchBaseQuery({
+    baseUrl: "http://localhost:5175/",
+  }),
+  tagTypes: ["Hero"],
   endpoints: (builder) => ({
-    getHeroes: builder.query<IHero[], void>({ query: () => "getHeroes" }),
+    getHeroes: builder.query<
+      { heroes: IHero[]; totalPages: number },
+      { page: number }
+    >({
+      query: ({ page }) => `/heroes?page=${page}`,
+      providesTags: ["Hero"],
+    }),
+    addHero: builder.mutation<IHero, PostHero>({
+      query: (hero) => ({ url: "/heroes", method: "POST", body: hero }),
+      invalidatesTags: ["Hero"],
+    }),
+    deleteHero: builder.mutation<void, number>({
+      query: (id) => ({ url: `/heroes/${id}`, method: "DELETE" }),
+      invalidatesTags: ["Hero"],
+    }),
+    updateHero: builder.mutation<
+      IHero,
+      { id: number; data: Partial<PostHero> }
+    >({
+      query: ({ id, data }) => ({
+        url: `/heroes/${id}`,
+        method: "PATCH",
+        body: data,
+      }),
+      invalidatesTags: ["Hero"],
+    }),
   }),
 });
 
-export const { useGetHeroesQuery } = heroApi;
+export const {
+  useGetHeroesQuery,
+  useAddHeroMutation,
+  useDeleteHeroMutation,
+  useUpdateHeroMutation,
+} = heroApi;

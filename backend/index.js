@@ -7,11 +7,7 @@ import pkg from "pg";
 const { Pool } = pkg;
 
 const pool = new Pool({
-  host: process.env.HOST,
-  port: Number(process.env.PORT),
-  user: process.env.USER,
-  password: process.env.PASSWORD,
-  database: process.env.NAME,
+  connectionString: process.env.DATABASE_URL,
   ssl: { rejectUnauthorized: false },
 });
 
@@ -20,7 +16,6 @@ const PORT = 5173;
 
 app.use(cors());
 app.use(express.json());
-
 app.get("/", (req, res) => {
   console.log("i am working");
   res.send("i am working");

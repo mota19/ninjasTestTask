@@ -1,0 +1,128 @@
+[
+  {
+    "nickname": "Batman",
+    "real_name": "Bruce Wayne",
+    "origin_description": "Witnessed the murder of his parents as a child and swore to fight crime in Gotham City.",
+    "superpowers": [
+      "peak human conditioning",
+      "genius-level intellect",
+      "martial arts mastery",
+      "stealth"
+    ],
+    "catch_phrase": "I am Batman!",
+    "images": []
+  },
+  {
+    "nickname": "Wonder Woman",
+    "real_name": "Diana Prince",
+    "origin_description": "Amazonian princess from Themyscira, sent to the world of men to promote peace and justice.",
+    "superpowers": [
+      "super strength",
+      "flight",
+      "combat skill",
+      "lasso of truth",
+      "invulnerability"
+    ],
+    "catch_phrase": "In the name of all that is good, your wrath upon the wicked!",
+    "images": []
+  },
+  {
+    "nickname": "Spider-Man",
+    "real_name": "Peter Parker",
+    "origin_description": "Bitten by a radioactive spider, gaining spider-like abilities and vowing to use them responsibly.",
+    "superpowers": [
+      "wall-crawling",
+      "super agility",
+      "spider-sense",
+      "web-shooting"
+    ],
+    "catch_phrase": "With great power comes great responsibility.",
+    "images": []
+  },
+  {
+    "nickname": "Iron Man",
+    "real_name": "Tony Stark",
+    "origin_description": "Genius billionaire inventor who created a powered suit of armor to fight evil.",
+    "superpowers": [
+      "powered armor suit",
+      "genius intellect",
+      "engineering mastery",
+      "flight"
+    ],
+    "catch_phrase": "I am Iron Man.",
+    "images": []
+  },
+  {
+    "nickname": "Thor",
+    "real_name": "Thor Odinson",
+    "origin_description": "God of Thunder from Asgard, wielding the mystical hammer Mjolnir.",
+    "superpowers": [
+      "super strength",
+      "control over lightning",
+      "flight via hammer",
+      "immortality"
+    ],
+    "catch_phrase": "By the power of Asgard!",
+    "images": []
+  },
+  {
+    "nickname": "Hulk",
+    "real_name": "Bruce Banner",
+    "origin_description": "Scientist exposed to gamma radiation, transforming into a giant green monster when angry.",
+    "superpowers": [
+      "super strength",
+      "invulnerability",
+      "regeneration",
+      "gamma-powered rage"
+    ],
+    "catch_phrase": "Hulk smash!",
+    "images": []
+  },
+  {
+    "nickname": "Black Widow",
+    "real_name": "Natasha Romanoff",
+    "origin_description": "Highly trained spy and assassin, formerly part of the KGB.",
+    "superpowers": ["martial arts", "espionage", "expert marksman", "stealth"],
+    "catch_phrase": "At some point, we all have to choose what we fight for.",
+    "images": []
+  },
+  {
+    "nickname": "Captain America",
+    "real_name": "Steve Rogers",
+    "origin_description": "Enhanced to the peak of human perfection by the Super Soldier Serum to fight in World War II.",
+    "superpowers": [
+      "super strength",
+      "enhanced agility",
+      "combat skill",
+      "shield mastery"
+    ],
+    "catch_phrase": "I can do this all day.",
+    "images": []
+  },
+  {
+    "nickname": "Flash",
+    "real_name": "Barry Allen",
+    "origin_description": "Gained super speed after a particle accelerator accident, fighting crime in Central City.",
+    "superpowers": [
+      "super speed",
+      "time travel",
+      "phasing through objects",
+      "accelerated healing"
+    ],
+    "catch_phrase": "Fastest man alive!",
+    "images": []
+  },
+  {
+    "nickname": "Green Lantern",
+    "real_name": "Hal Jordan",
+    "origin_description": "Chosen by a powerful ring to serve as an intergalactic peacekeeper.",
+    "superpowers": [
+      "power ring manipulation",
+      "flight",
+      "energy constructs",
+      "force fields"
+    ],
+    "catch_phrase": "In brightest day, in blackest night!",
+    "images": []
+  }
+]

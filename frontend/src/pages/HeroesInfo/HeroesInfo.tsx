@@ -4,10 +4,11 @@ import styles from "./HeroInfo.module.css";
 import { useGetHeroByIdQuery } from "../../redux/sevices/heroApi";
 import DeleteButton from "./components/DeleteButton";
 import UpdateButton from "./components/UpdataeButton";
+import { useNavigate } from "react-router-dom";
 
 const HeroesInfo: FC = () => {
   const { id = 0 } = useParams();
-
+  const navigate = useNavigate();
   const { data, isLoading, error } = useGetHeroByIdQuery({ id: Number(id) });
   if (isLoading) return <div>loading...</div>;
 
@@ -17,14 +18,15 @@ const HeroesInfo: FC = () => {
 
   return (
     <div className={styles.container}>
+      <button onClick={() => navigate(-1)} className={styles.goBackButton}>Go Back</button>
       <div className={styles.left}>
-   {data.images.map((el) => (
-  <img
-    key={el}
-    src={el} 
-    alt={data.nickname}
-    className={styles.poster}
-  />
+      {data.images.map((el) => (
+      <img
+        key={el}
+        src={el} 
+        alt={data.nickname}
+        className={styles.poster}
+      />
 ))}
       </div>
 

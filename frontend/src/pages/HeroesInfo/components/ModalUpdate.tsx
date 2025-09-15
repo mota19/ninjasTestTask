@@ -3,7 +3,7 @@ import { useAppSelector } from "../../../redux/hooks/hooks";
 import styles from "./ModalUpdate.module.css";
 import { useUpdateHeroMutation } from "../../../redux/sevices/heroApi";
 
-const ModalUpdate: FC = () => {
+const ModalUpdate: FC<{setIsOpen: (isOpen: boolean) => void}> = ({ setIsOpen }) => {
   const hero = useAppSelector((state) => state.heroes.hero);
   const [updateHero] = useUpdateHeroMutation();
 
@@ -60,7 +60,7 @@ const ModalUpdate: FC = () => {
       newImages.forEach((file) => formDataImages.append("images", file));
       formDataImages.append("heroId", hero.id.toString());
 
-      const res = await fetch("http://localhost:5175/upload", {
+      const res = await fetch("https://ninjastesttask.onrender.com/upload", {
         method: "PATCH",
         body: formDataImages,
       });
@@ -69,7 +69,7 @@ const ModalUpdate: FC = () => {
       uploadedImagePaths = data.urls;
     }
 
-    // Поєднуємо старі та нові зображення
+
     const allImages = [...existingImages, ...uploadedImagePaths];
 
     const dataToSave = {
@@ -167,7 +167,12 @@ const ModalUpdate: FC = () => {
             ))}
           </div>
 
+          <div className={styles.buttons}>
           <button type="submit">Save</button>
+          <button type="button" onClick={() => setIsOpen(false)}>
+            Close
+          </button>
+        </div>
         </form>
       </div>
     </div>

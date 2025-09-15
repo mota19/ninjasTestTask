@@ -7,7 +7,7 @@ const UpdateButton: FC = () => {
 
   return (
     <>
-      {open && <CreateModal />}
+      {open && <CreateModal setIsOpen={setOpen}/>}
       <button onClick={() => setOpen(!open)} className={styles.updateButton}>Create</button>
     </>
   );

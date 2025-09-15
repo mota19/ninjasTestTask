@@ -2,7 +2,7 @@ import { useState, type FC } from "react";
 import styles from "./CreateModal.module.css";
 import { useAddHeroMutation } from "../../../redux/sevices/heroApi";
 
-const CreateModal: FC = () => {
+const CreateModal: FC<{setIsOpen: (isOpen: boolean) => void}> = ({ setIsOpen }) => {
   const [addHero] = useAddHeroMutation();
 
   const [formData, setFormData] = useState({
@@ -13,7 +13,7 @@ const CreateModal: FC = () => {
   });
   const [superpowers, setSuperpowers] = useState<string[]>([""]);
   const [newImages, setNewImages] = useState<File[]>([]);
-  const [uploadedImages, setUploadedImages] = useState<string[]>([]);
+  const [, setUploadedImages] = useState<string[]>([]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -33,15 +33,16 @@ const CreateModal: FC = () => {
     setNewImages([...newImages, ...Array.from(e.target.files)]);
   };
 
-  const handleSubmit = async () => {
-
+const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
     let uploadedImagePaths: string[] = [];
 
     if (newImages.length > 0) {
       const formDataImages = new FormData();
       newImages.forEach((file) => formDataImages.append("images", file));
 
-      const res = await fetch("http://localhost:5175/upload", {
+      console.log(formDataImages);
+      const res = await fetch("https://ninjastesttask.onrender.com/upload", {
         method: "POST",
         body: formDataImages,
       });
@@ -61,6 +62,23 @@ const CreateModal: FC = () => {
 
     await addHero(dataToSave);
 
+    setFormData({
+      catch_phrase: "",
+      nickname: "",
+      origin_description: "",
+      real_name: "",
+    });
+    setSuperpowers([""]);
+    setNewImages([]);
+    setUploadedImages([]);
+
+
+    setIsOpen(false);
+  };
+
+
+  const handleRemoveImage = (index: number) => {
+    setNewImages((prev) => prev.filter((_, i) => i !== index));
   };
 
   return (
@@ -114,19 +132,30 @@ const CreateModal: FC = () => {
           </button>
 
           <input type="file" multiple onChange={handleImageChange} />
-          <div className={styles.preview}>
+                 <div className={styles.preview}>
             {newImages.map((file, index) => (
-              <div key={`new-${index}`}>
+              <div key={`new-${index}`} className={styles.imageWrapper}>
                 <img
                   src={URL.createObjectURL(file)}
                   alt={`new-${index}`}
                   width={100}
                 />
+                <button
+                  type="button"
+                  onClick={() => handleRemoveImage(index)}
+                  className={styles.removeBtn}
+                >
+                  delete
+                </button>
               </div>
             ))}
           </div>
-
+        <div className={styles.buttons}>
           <button type="submit">Create Hero</button>
+          <button type="button" onClick={() => setIsOpen(false)}>
+            Close
+          </button>
+        </div>
         </form>
       </div>
     </div>

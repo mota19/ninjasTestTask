@@ -1,6 +1,10 @@
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
+import multer from "multer";
+import fs from "fs";
+import path from "path";
+import { fileURLToPath } from "url";
 dotenv.config();
 
 import pkg from "pg";
@@ -11,11 +15,18 @@ const pool = new Pool({
   ssl: { rejectUnauthorized: false },
 });
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 const app = express();
 const PORT = 5175;
 
 app.use(cors());
 app.use(express.json());
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+
+
+
 app.get("/", (req, res) => {
   console.log("i am working");
   res.send("i am working");
@@ -88,6 +99,31 @@ app.patch("/heroes/:id", async (req, res) => {
   } catch (err) {
     res.status(500).json({ error: "DB Error" });
   }
+});
+
+const ensureFolderExists = (folderPath) => {
+  if (!fs.existsSync(folderPath)) fs.mkdirSync(folderPath, { recursive: true });
+};
+
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    const heroId = req.body.heroId;
+    const uploadPath = path.join(__dirname, "uploads", heroId);
+    ensureFolderExists(uploadPath);
+    cb(null, uploadPath);
+  },
+  filename: (req, file, cb) => cb(null, Date.now() + "-" + file.originalname),
+});
+
+const upload = multer({ storage });
+
+
+app.post("/upload", upload.single("image"), (req, res) => {
+  if (!req.file || !req.body.heroId)
+    return res.status(400).json({ error: "No file or heroId" });
+
+  const filePath = `/uploads/${req.body.heroId}/${req.file.filename}`;
+  res.json({ path: filePath });
 });
 
 app.listen(PORT, () => {

@@ -2,7 +2,7 @@ import type { FC } from "react";
 import { useParams } from "react-router-dom";
 import styles from "./HeroInfo.module.css";
 import { useGetHeroByIdQuery } from "../../redux/sevices/heroApi";
-import DeleteButton from "./components/deleteButton";
+import DeleteButton from "./components/DeleteButton";
 import UpdateButton from "./components/UpdataeButton";
 
 const HeroesInfo: FC = () => {

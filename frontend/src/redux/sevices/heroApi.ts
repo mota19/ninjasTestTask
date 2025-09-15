@@ -4,7 +4,8 @@ import type { IHero, PostHero } from "../../types/herotypes";
 export const heroApi = createApi({
   reducerPath: "heroApi",
   baseQuery: fetchBaseQuery({
-    baseUrl: "http://localhost:5175/",
+    // baseUrl: "http://localhost:5175/",
+    baseUrl: "https://ninjastesttask.onrender.com"
   }),
   tagTypes: ["Hero"],
   endpoints: (builder) => ({

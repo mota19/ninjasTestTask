@@ -1,11 +1,13 @@
 import { useState, type FC } from "react";
 import { useAppSelector } from "../../../redux/hooks/hooks";
 import styles from "./ModalUpdate.module.css";
+import { useUpdateHeroMutation } from "../../../redux/sevices/heroApi";
 
 const ModalUpdate: FC = () => {
   const hero = useAppSelector((state) => state.heroes.hero);
+  const [updateHero] = useUpdateHeroMutation();
   const [formData, setFormData] = useState({
-    id: hero?.id || 0,
+    
     catch_phrase: hero?.catch_phrase || "",
     nickname: hero?.nickname || "",
     origin_description: hero?.origin_description || "",
@@ -28,43 +30,39 @@ const ModalUpdate: FC = () => {
   };
 
 
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (!e.target.files) return;
-    setImages([...images, ...Array.from(e.target.files)]);
-  };
+const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  if (!e.target.files) return;
+  setImages(Array.from(e.target.files));
+};
 
  
-const handleSubmit = async (e: React.FormEvent) => {
-  e.preventDefault();
+const handleSubmit = async () => {
 
   if (!hero?.id) return;
 
-  const uploadedImagePaths: string[] = [];
 
-  for (const file of images) {
-    const formData = new FormData();
-    formData.append("image", file);
-    formData.append("heroId", hero.id.toString());
+  const formDataImages = new FormData();
+  images.forEach((file) => {
+    formDataImages.append("images", file); 
+  });
+  formDataImages.append("heroId", hero.id.toString());
 
-    const res = await fetch("hhttps://ninjastesttask.onrender.com/upload", {
-      method: "POST",
-      body: formData,
-    });
+  const res = await fetch("http://localhost:5175/upload", {
+    method: "PATCH",
+    body: formDataImages,
+  });
 
-    const data = await res.json();
-    uploadedImagePaths.push(data.path); 
-  }
+  const data = await res.json();
+  const uploadedImagePaths: string[] = data.urls;
 
   const dataToSave = {
     ...formData,
     superpowers,
-    images: uploadedImagePaths, 
+    images: uploadedImagePaths,
   };
 
-  console.log("Дані для збереження у БД:", dataToSave);
-
+  await updateHero({id: hero.id, data: dataToSave});
 };
-
 
   return (
     <div className={styles.modal}>
@@ -99,7 +97,6 @@ const handleSubmit = async (e: React.FormEvent) => {
             onChange={handleChange}
           />
 
-          {/* Суперсили */}
           {superpowers.map((power, index) => (
             <div key={index}>
               <input
@@ -113,7 +110,6 @@ const handleSubmit = async (e: React.FormEvent) => {
           ))}
           <button type="button" onClick={addSuperpower}>Додати суперсилу</button>
 
-          {/* Зображення */}
           <input type="file" multiple onChange={handleImageChange} />
           <div className={styles.preview}>
             {images.map((file, index) => (

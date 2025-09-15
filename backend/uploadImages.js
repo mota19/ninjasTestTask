@@ -1,0 +1,27 @@
+import cloudinary from "cloudinary";
+import dotenv from "dotenv";
+
+dotenv.config();
+
+cloudinary.v2.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
+
+console.log(process.env.CLOUDINARY_CLOUD_NAME)
+
+export const uploadImages = async (filePaths) => {
+  try {
+    const uploadPromises = filePaths.map((filePath) =>
+      cloudinary.v2.uploader.upload(filePath, { folder: "uploads" })
+    );
+    const results = await Promise.all(uploadPromises);
+    console.log("Cloudinary multiple upload results:", results);
+    return results.map((result) => result.secure_url);
+  } catch (error) {
+    console.error("Cloudinary multiple upload error:", error);
+    throw error;
+  }
+};
+

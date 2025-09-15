@@ -13,12 +13,14 @@ const HeroesInfo: FC = () => {
 
   if (error || !data) return <div>error not found</div>;
 
+console.log(data)
+
   return (
     <div className={styles.container}>
       <div className={styles.left}>
         {data.images.map((el) => (
           <img
-            src={`/images/${id}/${el}`}
+            src={`https://res.cloudinary.com/dtmxahj3g/image/uploads/${el}`}
             alt={data.nickname}
             className={styles.poster}
           />

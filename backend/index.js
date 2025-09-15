@@ -1,11 +1,10 @@
+import dotenv from "dotenv";
+dotenv.config();
 import express from "express";
 import cors from "cors";
-import dotenv from "dotenv";
 import multer from "multer";
-import fs from "fs";
-import path from "path";
-import { fileURLToPath } from "url";
-dotenv.config();
+import { uploadImages } from "./uploadImages.js";
+
 
 import pkg from "pg";
 const { Pool } = pkg;
@@ -15,17 +14,14 @@ const pool = new Pool({
   ssl: { rejectUnauthorized: false },
 });
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 
 const app = express();
 const PORT = 5175;
 
 app.use(cors());
 app.use(express.json());
-app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
-
+const upload = multer({ dest: "tmp/" });
 
 app.get("/", (req, res) => {
   console.log("i am working");
@@ -88,12 +84,13 @@ app.delete("/heroes/:id", async (req, res) => {
 
 app.patch("/heroes/:id", async (req, res) => {
   const { id } = req.params;
-  const { nickname, real_name, origin_description, superpowers } = req.body;
+  const { nickname, real_name, origin_description, superpowers, images, catch_phrase } = req.body;
+  console.log(req.body)
   try {
     const result = await pool.query(
       `UPDATE heroes SET nickname=$1, real_name=$2, origin_description=$3,
-       superpowers=$4 WHERE id=$5 RETURNING *`,
-      [nickname, real_name, origin_description, superpowers, id]
+       superpowers=$4, images=$5, catch_phrase=$6 WHERE id=$7 RETURNING *`,
+      [nickname, real_name, origin_description, superpowers, images, catch_phrase, id]
     );
     res.json(result.rows[0]);
   } catch (err) {
@@ -101,29 +98,15 @@ app.patch("/heroes/:id", async (req, res) => {
   }
 });
 
-const ensureFolderExists = (folderPath) => {
-  if (!fs.existsSync(folderPath)) fs.mkdirSync(folderPath, { recursive: true });
-};
 
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    const heroId = req.body.heroId;
-    const uploadPath = path.join(__dirname, "uploads", heroId);
-    ensureFolderExists(uploadPath);
-    cb(null, uploadPath);
-  },
-  filename: (req, file, cb) => cb(null, Date.now() + "-" + file.originalname),
-});
-
-const upload = multer({ storage });
-
-
-app.post("/upload", upload.single("image"), (req, res) => {
-  if (!req.file || !req.body.heroId)
-    return res.status(400).json({ error: "No file or heroId" });
-
-  const filePath = `/uploads/${req.body.heroId}/${req.file.filename}`;
-  res.json({ path: filePath });
+app.patch("/upload", upload.array("images"), async (req, res) => {
+  try {
+    const filePaths = req.files.map((file) => file.path);
+    const urls = await uploadImages(filePaths);
+    res.json({ urls });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 });
 
 app.listen(PORT, () => {

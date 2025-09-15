@@ -39,6 +39,17 @@ app.get("/heroes", async (req, res) => {
   }
 });
 
+app.get("/hero/:id", async (req, res) => {
+  try {
+    const id = req.params.id;
+    const result = await pool.query("SELECT * FROM heroes WHERE id = $1", [id]);
+    res.json(result.rows[0]);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Database error" });
+  }
+});
+
 app.post("/heroes", async (req, res) => {
   const { nickname, real_name, origin_description, superpowers } = req.body;
 

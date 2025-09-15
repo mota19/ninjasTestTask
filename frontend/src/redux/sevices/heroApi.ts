@@ -13,6 +13,11 @@ export const heroApi = createApi({
       { page: number }
     >({
       query: ({ page }) => `/heroes?page=${page}`,
+      keepUnusedDataFor: 10,
+      providesTags: ["Hero"],
+    }),
+    getHeroById: builder.query<IHero, { id: number }>({
+      query: ({ id }) => `/hero/${id}`,
       providesTags: ["Hero"],
     }),
     addHero: builder.mutation<IHero, PostHero>({
@@ -39,6 +44,7 @@ export const heroApi = createApi({
 
 export const {
   useGetHeroesQuery,
+  useGetHeroByIdQuery,
   useAddHeroMutation,
   useDeleteHeroMutation,
   useUpdateHeroMutation,

@@ -1,0 +1,50 @@
+.container {
+  display: flex;
+  gap: 30px;
+  padding: 20px;
+  background: #afadad;
+  color: #111;
+  border-radius: 10px;
+  max-width: 900px;
+  margin: 20px auto;
+}
+
+.left {
+  flex: 0 0 250px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+}
+
+.poster {
+  width: 100%;
+  border-radius: 10px;
+  object-fit: cover;
+}
+
+.button {
+  background: #444;
+  color: #fff;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background 0.3s;
+}
+.button:hover {
+  background: #666;
+}
+
+.right {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.title {
+  font-size: 28px;
+  margin-bottom: 10px;
+}

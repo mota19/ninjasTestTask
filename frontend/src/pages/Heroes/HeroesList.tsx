@@ -1,21 +1,27 @@
 import { useState, type FC } from "react";
 import { useGetHeroesQuery } from "../../redux/sevices/heroApi";
-import HeroCard from "./components/heroCard";
+import HeroCard from "./components/HeroCard";
 import Pagination from "./components/pagination";
-import styles from "./HeroList.module.css";
+import styles from "./HeroesList.module.css";
 
 const HeroesList: FC = () => {
   const [currentPage, setCurrentPage] = useState(1);
-  const { data, isLoading } = useGetHeroesQuery({ page: currentPage });
 
-  if (isLoading) {
-    return <div>...</div>;
-  }
+  const { data, isLoading, error } = useGetHeroesQuery({ page: currentPage });
+
+  if (isLoading) return <div>loading...</div>;
+
+  if (error || !data) return <div>error not found</div>;
 
   return (
     <div className={styles.container}>
       {data?.heroes?.map((el) => (
-        <HeroCard nickname={el.nickname} images={el.images} key={el.id} />
+        <HeroCard
+          nickname={el.nickname}
+          images={el.images}
+          key={el.id}
+          id={el.id}
+        />
       ))}
       {data?.totalPages && (
         <Pagination

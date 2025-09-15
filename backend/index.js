@@ -58,12 +58,12 @@ app.get("/hero/:id", async (req, res) => {
 });
 
 app.post("/heroes", async (req, res) => {
-  const { nickname, real_name, origin_description, superpowers } = req.body;
-
+ const { nickname, real_name, origin_description, superpowers, images, catch_phrase } = req.body;
+ console.log(req.body);
   try {
     const result = await pool.query(
-      "INSERT INTO heroes (nickname,real_name,origin_description,superpowers) VALUES ($1, $2, $3, $4) RETURNING *",
-      [nickname, real_name, origin_description, superpowers]
+      "INSERT INTO heroes (nickname,real_name,origin_description,superpowers,images,catch_phrase) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *",
+      [nickname, real_name, origin_description, superpowers, images, catch_phrase]
     );
     res.status(201).json(result.rows[0]);
   } catch (error) {
@@ -85,7 +85,7 @@ app.delete("/heroes/:id", async (req, res) => {
 app.patch("/heroes/:id", async (req, res) => {
   const { id } = req.params;
   const { nickname, real_name, origin_description, superpowers, images, catch_phrase } = req.body;
-  console.log(req.body)
+  
   try {
     const result = await pool.query(
       `UPDATE heroes SET nickname=$1, real_name=$2, origin_description=$3,
@@ -100,6 +100,16 @@ app.patch("/heroes/:id", async (req, res) => {
 
 
 app.patch("/upload", upload.array("images"), async (req, res) => {
+  try {
+    const filePaths = req.files.map((file) => file.path);
+    const urls = await uploadImages(filePaths);
+    res.json({ urls });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.post("/upload", upload.array("images"), async (req, res) => {
   try {
     const filePaths = req.files.map((file) => file.path);
     const urls = await uploadImages(filePaths);

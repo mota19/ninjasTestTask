@@ -17,7 +17,7 @@ export const uploadImages = async (filePaths) => {
       cloudinary.v2.uploader.upload(filePath, { folder: "uploads" })
     );
     const results = await Promise.all(uploadPromises);
-    console.log("Cloudinary multiple upload results:", results);
+ 
     return results.map((result) => result.secure_url);
   } catch (error) {
     console.error("Cloudinary multiple upload error:", error);

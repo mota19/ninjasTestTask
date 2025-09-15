@@ -1,0 +1,7 @@
+.updateButton {
+  background: #2980b9;
+ border-radius: 10px;
+}
+.updateButton:hover {
+  background: #3498db;
+}

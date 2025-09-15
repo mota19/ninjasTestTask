@@ -13,18 +13,19 @@ const HeroesInfo: FC = () => {
 
   if (error || !data) return <div>error not found</div>;
 
-console.log(data)
+
 
   return (
     <div className={styles.container}>
       <div className={styles.left}>
-        {data.images.map((el) => (
-          <img
-            src={`https://res.cloudinary.com/dtmxahj3g/image/uploads/${el}`}
-            alt={data.nickname}
-            className={styles.poster}
-          />
-        ))}
+   {data.images.map((el) => (
+  <img
+    key={el}
+    src={el} 
+    alt={data.nickname}
+    className={styles.poster}
+  />
+))}
       </div>
 
       <div className={styles.right}>
@@ -42,8 +43,11 @@ console.log(data)
           <strong>Catch phrase</strong> {data.catch_phrase}
         </p>
       </div>
-      <DeleteButton id={+id} />
-      <UpdateButton />
+      <div className={styles.buttons}>
+        <DeleteButton id={+id} />
+        <UpdateButton />
+      </div>
+
     </div>
   );
 };

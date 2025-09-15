@@ -3,6 +3,7 @@ import { useGetHeroesQuery } from "../../redux/sevices/heroApi";
 import HeroCard from "./components/HeroCard";
 import Pagination from "./components/pagination";
 import styles from "./HeroesList.module.css";
+import CreateButton from "./components/CreateButton";
 
 const HeroesList: FC = () => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -15,6 +16,7 @@ const HeroesList: FC = () => {
 
   return (
     <div className={styles.container}>
+      <CreateButton />
       {data?.heroes?.map((el) => (
         <HeroCard
           nickname={el.nickname}

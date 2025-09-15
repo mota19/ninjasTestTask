@@ -1,11 +1,9 @@
-import { useState, type FC, useEffect } from "react";
-import { useAppSelector } from "../../../redux/hooks/hooks";
-import styles from "./ModalUpdate.module.css";
-import { useUpdateHeroMutation } from "../../../redux/sevices/heroApi";
+import { useState, type FC } from "react";
+import styles from "./CreateModal.module.css";
+import { useAddHeroMutation } from "../../../redux/sevices/heroApi";
 
-const ModalUpdate: FC = () => {
-  const hero = useAppSelector((state) => state.heroes.hero);
-  const [updateHero] = useUpdateHeroMutation();
+const CreateModal: FC = () => {
+  const [addHero] = useAddHeroMutation();
 
   const [formData, setFormData] = useState({
     catch_phrase: "",
@@ -14,21 +12,8 @@ const ModalUpdate: FC = () => {
     real_name: "",
   });
   const [superpowers, setSuperpowers] = useState<string[]>([""]);
-  const [existingImages, setExistingImages] = useState<string[]>([]);
   const [newImages, setNewImages] = useState<File[]>([]);
-
-  useEffect(() => {
-    if (hero) {
-      setFormData({
-        catch_phrase: hero.catch_phrase || "",
-        nickname: hero.nickname || "",
-        origin_description: hero.origin_description || "",
-        real_name: hero.real_name || "",
-      });
-      setSuperpowers(hero.superpowers?.length ? hero.superpowers : [""]);
-      setExistingImages(hero.images || []);
-    }
-  }, [hero]);
+  const [uploadedImages, setUploadedImages] = useState<string[]>([]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -49,39 +34,33 @@ const ModalUpdate: FC = () => {
   };
 
   const handleSubmit = async () => {
-    
-    if (!hero?.id) return;
 
     let uploadedImagePaths: string[] = [];
 
-    console.log(newImages)
     if (newImages.length > 0) {
       const formDataImages = new FormData();
       newImages.forEach((file) => formDataImages.append("images", file));
-      formDataImages.append("heroId", hero.id.toString());
 
       const res = await fetch("http://localhost:5175/upload", {
-        method: "PATCH",
+        method: "POST",
         body: formDataImages,
       });
 
       const data = await res.json();
       uploadedImagePaths = data.urls;
+      setUploadedImages(uploadedImagePaths);
     }
 
-    // Поєднуємо старі та нові зображення
-    const allImages = [...existingImages, ...uploadedImagePaths];
+    console.log(uploadedImagePaths);
 
     const dataToSave = {
       ...formData,
       superpowers,
-      images: allImages,
+      images: uploadedImagePaths,
     };
 
-    await updateHero({ id: hero.id, data: dataToSave });
+    await addHero(dataToSave);
 
-    setExistingImages(allImages);
-    setNewImages([]);
   };
 
   return (
@@ -136,20 +115,6 @@ const ModalUpdate: FC = () => {
 
           <input type="file" multiple onChange={handleImageChange} />
           <div className={styles.preview}>
-            {existingImages.map((url, index) => (
-              <div key={`existing-${index}`}>
-                <img src={url} alt={`existing-${index}`} width={100} />
-                <button
-                  type="button"
-                  onClick={() =>
-                    setExistingImages(existingImages.filter((_, i) => i !== index))
-                  }
-                >
-                  Delete
-                </button>
-              </div>
-            ))}
-
             {newImages.map((file, index) => (
               <div key={`new-${index}`}>
                 <img
@@ -157,21 +122,15 @@ const ModalUpdate: FC = () => {
                   alt={`new-${index}`}
                   width={100}
                 />
-                <button
-                  type="button"
-                  onClick={() => setNewImages(newImages.filter((_, i) => i !== index))}
-                >
-                  Delete
-                </button>
               </div>
             ))}
           </div>
 
-          <button type="submit">Save</button>
+          <button type="submit">Create Hero</button>
         </form>
       </div>
     </div>
   );
 };
 
-export default ModalUpdate;
+export default CreateModal;
